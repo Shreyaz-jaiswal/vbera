@@ -1,0 +1,209 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VibeEra Accessories</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Segoe UI, sans-serif;
+}
+body{background:#fff;color:#222}
+header{
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px solid #eee;
+}
+.logo{font-size:26px;font-weight:700}
+section{padding:40px}
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+.card{
+  border:1px solid #eee;
+  padding:15px;
+  text-align:center;
+}
+.card img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+}
+button{
+  padding:8px 18px;
+  background:black;
+  color:white;
+  border:none;
+  cursor:pointer;
+}
+input,textarea{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+}
+.cart,.invoice{background:#f5f5f5}
+.invoice{display:none}
+footer{
+  background:black;
+  color:white;
+  text-align:center;
+  padding:20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">VibeEra</div>
+</header>
+
+<!-- PRODUCTS -->
+<section>
+<h2>Our Products</h2>
+<div class="product-grid">
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f">
+<h3>Leather Wallet</h3>
+<p>₹899</p>
+<button onclick="addToCart('Leather Wallet',899)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519">
+<h3>Bracelet</h3>
+<p>₹499</p>
+<button onclick="addToCart('Bracelet',499)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1585386959984-a4155224a1d1">
+<h3>Sunglasses</h3>
+<p>₹1299</p>
+<button onclick="addToCart('Sunglasses',1299)">Add to Cart</button>
+</div>
+
+</div>
+</section>
+
+<!-- CART -->
+<section class="cart">
+<h2>Your Cart</h2>
+<div id="cartItems"></div>
+<h3 id="total"></h3>
+</section>
+
+<!-- BILLING -->
+<section>
+<h2>Billing Details</h2>
+<input id="name" placeholder="Customer Name">
+<input id="phone" placeholder="Phone Number">
+<textarea id="address" placeholder="Delivery Address"></textarea>
+<button onclick="placeOrder()">Place Order</button>
+</section>
+
+<!-- INVOICE -->
+<section class="invoice" id="invoice">
+<h2>VibeEra Invoice</h2>
+<p id="invName"></p>
+<p id="invPhone"></p>
+<p id="invAddress"></p>
+<hr>
+<div id="invItems"></div>
+<h3 id="invTotal"></h3>
+<button onclick="window.print()">Print Invoice</button>
+</section>
+
+<footer>
+  <p>
+    VibeEra is an Accessories brand startuped by Tejashwa Pandey and his friends.
+     This an idea of extreme creation and mindset.
+  </p>
+  <p>
+    Contact us :- +918423702403
+  </p>
+  <p>
+    address :- Dayanand nagar, gorakhpur, 273015
+  </p>
+© 2026 VibeEra Accessories
+</footer>
+
+<!-- EMAILJS -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+emailjs.init("jO44k4Y07o-bKvnph");
+
+const OWNER_PHONE = "918423702403";
+let cart = [];
+let total = 0;
+
+function addToCart(name, price){
+  cart.push({name, price});
+  total += price;
+  renderCart();
+}
+
+function renderCart(){
+  document.getElementById("cartItems").innerHTML =
+    cart.map(i => `<p>${i.name} - ₹${i.price}</p>`).join("");
+  document.getElementById("total").innerText = "Total: ₹" + total;
+}
+
+function placeOrder(){
+  let name = document.getElementById("name").value;
+  let phone = document.getElementById("phone").value;
+  let address = document.getElementById("address").value;
+
+  if(!name || !phone || !address || cart.length === 0){
+    alert("Please fill all details and add items");
+    return;
+  }
+
+  let orderText = cart.map(i => `${i.name} - ₹${i.price}`).join(", ");
+
+  /* EMAIL NOTIFICATION */
+  emailjs.send("service_4hl3ksn", "template_i04e07g", {
+    name: name,
+    phone: phone,
+    address: address,
+    order: orderText,
+    total: total
+  });
+
+  /* WHATSAPP ALERT */
+  let msg =
+    `NEW ORDER%0A` +
+    `Name: ${name}%0A` +
+    `Phone: ${phone}%0A` +
+    `Address: ${address}%0A` +
+    `Order: ${orderText}%0A` +
+    `Total: ₹${total}`;
+
+  window.open(`https://wa.me/${OWNER_PHONE}?text=${msg}`);
+
+  /* INVOICE */
+  document.getElementById("invoice").style.display = "block";
+  document.getElementById("invName").innerText = "Name: " + name;
+  document.getElementById("invPhone").innerText = "Phone: " + phone;
+  document.getElementById("invAddress").innerText = "Address: " + address;
+  document.getElementById("invItems").innerHTML =
+    cart.map(i => `<p>${i.name} - ₹${i.price}</p>`).join("");
+  document.getElementById("invTotal").innerText = "Total: ₹" + total;
+
+  alert("Order placed successfully!");
+  cart = [];
+  total = 0;
+  renderCart();
+}
+</script>
+
+</body>
+</html>
