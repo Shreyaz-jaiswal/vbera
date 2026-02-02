@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - VibeEra Accessories</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Segoe UI, sans-serif;
+}
+body{background:#fff;color:#222}
+header{
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px solid #eee;
+}
+.logo{font-size:26px;font-weight:700}
+section{padding:40px}
+form{max-width:400px;margin:0 auto}
+input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border:1px solid #eee;
+}
+button{
+  padding:8px 18px;
+  background:black;
+  color:white;
+  border:none;
+  cursor:pointer;
+  width:100%;
+}
+.register-link{
+  background:#222;
+  padding:10px 20px;
+  color:white;
+  text-decoration:none;
+  border-radius:4px;
+  display:inline-block;
+  margin-top:20px;
+  text-align:center;
+}
+footer{
+  background:black;
+  color:white;
+  text-align:center;
+  padding:20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">VibeEra</div>
+  <a href="index.html" style="color:#222;text-decoration:none">← Continue Shopping</a>
+</header>
+
+<section>
+  <h2 style="text-align:center;margin-bottom:30px">Login to Your Account</h2>
+  <form id="loginForm">
+    <input id="loginEmail" type="email" placeholder="Email" required>
+    <input id="loginPassword" type="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+  <div style="text-align:center">
+    <a href="register.html" class="register-link">← No account? Register here</a>
+  </div>
+</section>
+
+<footer>
+  <p>
+    VibeEra is an Accessories brand startuped by Tejashwa Pandey and his friends.
+     This an idea of extreme creation and mindset.
+  </p>
+  <p>
+    Contact us :- +918423702403
+  </p>
+  <p>
+    address :- Dayanand nagar, gorakhpur, 273015
+  </p>
+© 2026 VibeEra Accessories
+</footer>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  
+  const storedUser = localStorage.getItem('vibeera_user_' + email);
+  
+  if (storedUser) {
+    const user = JSON.parse(storedUser);
+    if (user.password === password) {
+      localStorage.setItem('vibeera_loggedin_user', email);
+      alert('Login successful! Welcome back, ' + user.name + '!');
+      window.location.href = 'index.html';
+    } else {
+      alert('Incorrect password!');
+    }
+  } else {
+    alert('No account found with this email!');
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VibeEra Accessories</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Segoe UI, sans-serif;
+}
+body{background:#fff;color:#222}
+header{
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px solid #eee;
+}
+.logo{font-size:26px;font-weight:700}
+section{padding:40px}
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+.card{
+  border:1px solid #eee;
+  padding:15px;
+  text-align:center;
+}
+.card img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+}
+button{
+  padding:8px 18px;
+  background:black;
+  color:white;
+  border:none;
+  cursor:pointer;
+}
+input,textarea{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+}
+.cart,.invoice{background:#f5f5f5}
+.invoice{display:none}
+footer{
+  background:black;
+  color:white;
+  text-align:center;
+  padding:20px;
+}
+.cart-link{
+  background:#222;
+  padding:10px 20px;
+  color:white;
+  text-decoration:none;
+  border-radius:4px;
+  display:inline-block;
+  margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">VibeEra</div>
+  <div style="display:flex;gap:10px">
+    <a href="login.html" style="color:#222;text-decoration:none" id="loginLink">Login</a>
+    <a href="cart.html" style="color:#222;text-decoration:none">View Cart</a>
+  </div>
+</header>
+
+<!-- PRODUCTS -->
+<section>
+<h2>Our Products</h2>
+<div class="product-grid">
+
+<div class="card">
+<a href="https://ibb.co/pBDZrW48"><img src="https://i.ibb.co/pBDZrW48/IMG-20260131-204201.jpg" alt="Analog Watch" border="0"></a>
+<h3>Analog Watch</h3>
+<p>₹219</p>
+<button onclick="addToCart('Analog Watch',219)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Bracelet">
+<h3>Bracelet</h3>
+<p>₹499</p>
+<button onclick="addToCart('Bracelet',499)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1585386959984-a4155224a1d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Sunglasses">
+<h3>Sunglasses</h3>
+<p>₹1299</p>
+<button onclick="addToCart('Sunglasses',1299)">Add to Cart</button>
+</div>
+
+</div>
+<div style="text-align:center">
+  <a href="cart.html" class="cart-link">→ Go to Cart</a>
+</div>
+</section>
+
+<!-- MINI CART PREVIEW -->
+<section class="cart">
+<h2>Your Cart Preview</h2>
+<div id="cartItems"></div>
+<h3 id="total">Total: ₹0</h3>
+<a href="cart.html" class="cart-link">→ View Full Cart & Checkout</a>
+</section>
+
+<footer>
+  <p>
+    VibeEra is an Accessories brand startuped by Tejashwa Pandey and his friends.
+     This an idea of extreme creation and mindset.
+  </p>
+  <p>
+    Contact us :- +918423702403
+  </p>
+  <p>
+    address :- Dayanand nagar, gorakhpur, 273015
+  </p>
+© 2026 VibeEra Accessories
+</footer>
+
+<!-- EMAILJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+emailjs.init("jO44k4Y07o-bKvnph");
+
+const OWNER_PHONE = "918423702403";
+let cart = JSON.parse(localStorage.getItem('vibeera_cart')) || [];
+let total = parseInt(localStorage.getItem('vibeera_total')) || 0;
+
+function addToCart(name, price){
+  cart.push({name, price});
+  total += price;
+  localStorage.setItem('vibeera_cart', JSON.stringify(cart));
+  localStorage.setItem('vibeera_total', total);
+  renderCart();
+  alert(`${name} added to cart!`);
+}
+
+function renderCart(){
+  document.getElementById("cartItems").innerHTML =
+    cart.map(i => `<p>${i.name} - ₹${i.price}</p>`).join("");
+  document.getElementById("total").innerText = "Total: ₹" + total;
+}
+
+// Check login status
+function checkLogin() {
+  const loggedInUser = localStorage.getItem('vibeera_loggedin_user');
+  const loginLink = document.getElementById('loginLink');
+  
+  if (loggedInUser) {
+    loginLink.innerHTML = 'Logout';
+    loginLink.href = '#';
+    loginLink.onclick = function(e) {
+      e.preventDefault();
+      localStorage.removeItem('vibeera_loggedin_user');
+      location.reload();
+    };
+  }
+}
+
+// Load cart and login status on page load
+renderCart();
+checkLogin();
+</script>
+
+</body>
+</html>

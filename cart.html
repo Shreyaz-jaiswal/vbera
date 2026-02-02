@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Cart - VibeEra Accessories</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Segoe UI, sans-serif;
+}
+body{background:#fff;color:#222}
+header{
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px solid #eee;
+}
+.logo{font-size:26px;font-weight:700}
+section{padding:40px}
+button{
+  padding:8px 18px;
+  background:black;
+  color:white;
+  border:none;
+  cursor:pointer;
+}
+input,textarea{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+}
+.cart,.invoice{background:#f5f5f5}
+.invoice{display:none}
+.empty-cart{text-align:center;padding:40px;color:#666}
+.empty-cart h3{font-size:24px;margin-bottom:10px}
+.back-btn{margin-top:20px}
+.shop-link{
+  background:#222;
+  padding:10px 20px;
+  color:white;
+  text-decoration:none;
+  border-radius:4px;
+  display:inline-block;
+}
+footer{
+  background:black;
+  color:white;
+  text-align:center;
+  padding:20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">VibeEra</div>
+  <div style="display:flex;gap:10px">
+    <a href="login.html" style="color:#222;text-decoration:none" id="loginLinkCart">Login</a>
+    <a href="index.html" style="color:#222;text-decoration:none">← Continue Shopping</a>
+  </div>
+</header>
+
+<!-- CART -->
+<section class="cart">
+  <h2>Your Cart</h2>
+  <div id="cartItems"></div>
+  <h3 id="total">Total: ₹0</h3>
+  
+  <div class="empty-cart" id="emptyCart" style="display:none">
+    <h3>Your cart is empty</h3>
+    <p>Add some amazing accessories to get started!</p>
+    <a href="index.html" class="shop-link">← Start Shopping</a>
+  </div>
+</section>
+
+<!-- BILLING -->
+<section>
+  <h2>Billing Details</h2>
+  <input id="name" placeholder="Customer Name">
+  <input id="phone" placeholder="Phone Number">
+  <textarea id="address" placeholder="Delivery Address"></textarea>
+  <button onclick="placeOrder()" id="placeOrderBtn" style="display:none">Place Order</button>
+</section>
+
+<!-- INVOICE -->
+<section class="invoice" id="invoice">
+<h2>VibeEra Invoice</h2>
+<p id="invName"></p>
+<p id="invPhone"></p>
+<p id="invAddress"></p>
+<hr>
+<div id="invItems"></div>
+<h3 id="invTotal"></h3>
+<button onclick="window.print()">Print Invoice</button>
+<button onclick="window.location.href='index.html'" style="margin-left:10px;background:#666">New Order</button>
+</section>
+
+<footer>
+  <p>
+    VibeEra is an Accessories brand startuped by Tejashwa Pandey and his friends.
+     This an idea of extreme creation and mindset.
+  </p>
+  <p>
+    Contact us :- +918423702403
+  </p>
+  <p>
+    address :- Dayanand nagar, gorakhpur, 273015
+  </p>
+© 2026 VibeEra Accessories
+</footer>
+
+<!-- EMAILJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+emailjs.init("jO44k4Y07o-bKvnph");
+
+const OWNER_PHONE = "918423702403";
+let cart = JSON.parse(localStorage.getItem('vibeera_cart')) || [];
+let total = parseInt(localStorage.getItem('vibeera_total')) || 0;
+
+function renderCart(){
+  const cartItems = document.getElementById("cartItems");
+  const totalEl = document.getElementById("total");
+  const emptyCart = document.getElementById("emptyCart");
+  const placeOrderBtn = document.getElementById("placeOrderBtn");
+  
+  if(cart.length === 0){
+    cartItems.innerHTML = "";
+    totalEl.innerHTML = "Total: ₹0";
+    emptyCart.style.display = "block";
+    placeOrderBtn.style.display = "none";
+  } else {
+    cartItems.innerHTML = cart.map(i => `<p>${i.name} - ₹${i.price}</p>`).join("");
+    totalEl.innerText = "Total: ₹" + total;
+    emptyCart.style.display = "none";
+    placeOrderBtn.style.display = "block";
+  }
+}
+
+function placeOrder(){
+  let name = document.getElementById("name").value;
+  let phone = document.getElementById("phone").value;
+  let address = document.getElementById("address").value;
+
+  if(!name || !phone || !address || cart.length === 0){
+    alert("Please fill all details and add items");
+    return;
+  }
+
+  let orderText = cart.map(i => `${i.name} - ₹${i.price}`).join(", ");
+
+  /* EMAIL NOTIFICATION */
+  emailjs.send("service_4hl3ksn", "template_i04e07g", {
+    name: name,
+    phone: phone,
+    address: address,
+    order: orderText,
+    total: total
+  }).then(() => {
+    console.log("Email sent successfully");
+  });
+
+  /* WHATSAPP ALERT */
+  let msg =
+    `🆕 NEW ORDER%0A` +
+    `👤 Name: ${name}%0A` +
+    `📱 Phone: ${phone}%0A` +
+    `📍 Address: ${address}%0A` +
+    `🛒 Order: ${orderText}%0A` +
+    `💰 Total: ₹${total}`;
+
+  window.open(`https://wa.me/${OWNER_PHONE}?text=${msg}`);
+
+  /* INVOICE */
+  document.getElementById("invoice").style.display = "block";
+  document.getElementById("invName").innerText = "Name: " + name;
+  document.getElementById("invPhone").innerText = "Phone: " + phone;
+  document.getElementById("invAddress").innerText = "Address: " + address;
+  document.getElementById("invItems").innerHTML =
+    cart.map(i => `<p>${i.name} - ₹${i.price}</p>`).join("");
+  document.getElementById("invTotal").innerText = "Total: ₹" + total;
+
+  alert("✅ Order placed successfully!");
+  
+  // Clear cart
+  cart = [];
+  total = 0;
+  localStorage.removeItem('vibeera_cart');
+  localStorage.removeItem('vibeera_total');
+  renderCart();
+}
+
+// Check login status for cart
+function checkLoginCart() {
+  const loggedInUser = localStorage.getItem('vibeera_loggedin_user');
+  const loginLink = document.getElementById('loginLinkCart');
+  
+  if (loggedInUser) {
+    loginLink.innerHTML = 'Logout';
+    loginLink.href = '#';
+    loginLink.onclick = function(e) {
+      e.preventDefault();
+      localStorage.removeItem('vibeera_loggedin_user');
+      location.reload();
+    };
+  }
+}
+
+// Load cart and login status on page load
+renderCart();
+checkLoginCart();
+</script>
+
+</body>
+</html>
