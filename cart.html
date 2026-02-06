@@ -46,6 +46,28 @@ input,textarea{
   border-radius:4px;
   display:inline-block;
 }
+.payment-section {
+  background: #fff3cd;
+  border: 2px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+.upi-id {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2d3436;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+  word-break: break-all;
+}
+.cod-btn {
+  background: #00b894;
+  margin: 10px;
+}
 footer{
   background:black;
   color:white;
@@ -87,6 +109,24 @@ footer{
   <button onclick="placeOrder()" id="placeOrderBtn" style="display:none">Place Order</button>
 </section>
 
+<!-- PAYMENT PAGE -->
+<section id="paymentPage" style="display:none">
+  <h2>Payment Required</h2>
+  <div class="payment-section">
+    <h3>Pay via UPI</h3>
+    <div class="upi-id">8318463749@fam</div>
+    <p><strong>Amount: <span id="payAmount">₹0</span></strong></p>
+    <p>After paying amount, please contact us at <strong>8423702403</strong> for payment confirmation.</p>
+    <br>
+    <h4>OR</h4>
+    <p>Want COD? Contact us at <strong>8423702403</strong></p>
+    <button class="cod-btn" onclick="contactCOD()">Contact for COD</button>
+  </div>
+  <div style="text-align:center">
+    <button onclick="backToBilling()" style="background:#666">← Back to Billing</button>
+  </div>
+</section>
+
 <!-- INVOICE -->
 <section class="invoice" id="invoice">
 <h2>VibeEra Invoice</h2>
@@ -123,6 +163,7 @@ emailjs.init("jO44k4Y07o-bKvnph");
 const OWNER_PHONE = "918423702403";
 let cart = JSON.parse(localStorage.getItem('vibeera_cart')) || [];
 let total = parseInt(localStorage.getItem('vibeera_total')) || 0;
+let customerDetails = {};
 
 function renderCart(){
   const cartItems = document.getElementById("cartItems");
@@ -144,65 +185,90 @@ function renderCart(){
 }
 
 function placeOrder(){
-  let name = document.getElementById("name").value.trim();
-  let phone = document.getElementById("phone").value.trim();
-  let address = document.getElementById("address").value.trim();
+  let name = document.getElementById("name").value;
+  let phone = document.getElementById("phone").value;
+  let address = document.getElementById("address").value;
 
   if(!name || !phone || !address || cart.length === 0){
     alert("Please fill all details and add items");
     return;
   }
 
-  let orderText = cart
-    .map((i, index) => `${index+1}. ${i.name} - ₹${i.price}`)
-    .join("\n");
+  // Store customer details and show payment page
+  customerDetails = {name, phone, address};
+  document.getElementById("payAmount").innerText = "₹" + total;
+  document.getElementById("paymentPage").style.display = "block";
+  document.querySelector("section.cart").scrollIntoView();
+}
 
-  // 📧 SEND EMAIL TO OWNER
+function backToBilling(){
+  document.getElementById("paymentPage").style.display = "none";
+}
+
+function contactCOD(){
+  window.open(`https://wa.me/918423702403?text=Hi, I want COD for my order of ₹${total}`);
+}
+
+// Generate invoice manually after payment confirmation
+function generateInvoice(){
+  /* EMAIL NOTIFICATION */
   emailjs.send("service_4hl3ksn", "template_i04e07g", {
-    name: name,
-    phone: phone,
-    address: address,
-    order: orderText,
+    name: customerDetails.name,
+    phone: customerDetails.phone,
+    address: customerDetails.address,
+    order: cart.map(i => `${i.name} - ₹${i.price}`).join(", "),
     total: total
-  }).then(
-    function(){
-      console.log("Email sent successfully");
-    },
-    function(error){
-      console.error("Email failed:", error);
-      alert("❌ Email sending failed!");
-    }
-  );
+  }).then(() => {
+    console.log("Email sent successfully");
+  });
 
-  // 📱 WHATSAPP ALERT
+  /* WHATSAPP ALERT */
   let msg =
-    `🆕 NEW ORDER\n` +
-    `👤 Name: ${name}\n` +
-    `📱 Phone: ${phone}\n` +
-    `📍 Address: ${address}\n` +
-    `🛒 Order:\n${orderText}\n` +
+    `🆕 NEW ORDER%0A` +
+    `👤 Name: ${customerDetails.name}%0A` +
+    `📱 Phone: ${customerDetails.phone}%0A` +
+    `📍 Address: ${customerDetails.address}%0A` +
+    `🛒 Order: ${cart.map(i => `${i.name} - ₹${i.price}`).join(", ")}%0A` +
     `💰 Total: ₹${total}`;
 
-  window.open(`https://wa.me/${OWNER_PHONE}?text=${encodeURIComponent(msg)}`);
+  window.open(`https://wa.me/${OWNER_PHONE}?text=${msg}`);
 
-  // 🧾 SHOW INVOICE
+  /* SHOW INVOICE */
   document.getElementById("invoice").style.display = "block";
-  document.getElementById("invName").innerText = "Name: " + name;
-  document.getElementById("invPhone").innerText = "Phone: " + phone;
-  document.getElementById("invAddress").innerText = "Address: " + address;
+  document.getElementById("invName").innerText = "Name: " + customerDetails.name;
+  document.getElementById("invPhone").innerText = "Phone: " + customerDetails.phone;
+  document.getElementById("invAddress").innerText = "Address: " + customerDetails.address;
   document.getElementById("invItems").innerHTML =
     cart.map(i => `<p>${i.name} - ₹${i.price}</p>`).join("");
   document.getElementById("invTotal").innerText = "Total: ₹" + total;
 
-  alert("✅ Order placed successfully!");
-
-  // 🧹 CLEAR CART
+  // Clear cart
   cart = [];
   total = 0;
-  localStorage.removeItem("vibeera_cart");
-  localStorage.removeItem("vibeera_total");
+  localStorage.removeItem('vibeera_cart');
+  localStorage.removeItem('vibeera_total');
   renderCart();
 }
+
+// Check login status for cart
+function checkLoginCart() {
+  const loggedInUser = localStorage.getItem('vibeera_loggedin_user');
+  const loginLink = document.getElementById('loginLinkCart');
+  
+  if (loggedInUser) {
+    loginLink.innerHTML = 'Logout';
+    loginLink.href = '#';
+    loginLink.onclick = function(e) {
+      e.preventDefault();
+      localStorage.removeItem('vibeera_loggedin_user');
+      location.reload();
+    };
+  }
+}
+
+// Load cart and login status on page load
+renderCart();
+checkLoginCart();
 </script>
 
 </body>
