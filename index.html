@@ -33,7 +33,7 @@ section{padding:40px}
 }
 .card img{
   width:100%;
-  height:200px;
+  height:250px; /* Increased height slightly for better visibility */
   object-fit:cover;
 }
 button{
@@ -42,6 +42,7 @@ button{
   color:white;
   border:none;
   cursor:pointer;
+  margin-top: 10px;
 }
 input,textarea{
   width:100%;
@@ -78,31 +79,37 @@ footer{
   </div>
 </header>
 
-<!-- PRODUCTS -->
 <section>
 <h2>Our Products</h2>
 <div class="product-grid">
 
-<div class="card">
-<a href="https://ibb.co/pBDZrW48"><img src="https://i.ibb.co/pBDZrW48/IMG-20260131-204201.jpg" alt="Analog Watch" border="0"></a>
-<h3>Analog Watch</h3>
-<p>₹219</p>
-<button onclick="addToCart('Analog Watch',219)">Add to Cart</button>
-</div>
+  <div class="card">
+    <img src="https://i.ibb.co/7dYmTg67/IMG-20260210-WA0004.jpg" alt="Accessory 1">
+    <h3>moon earings</h3>
+    <p>₹109</p>
+    <button onclick="addToCart('moon earings', 109)">Add to Cart</button>
+  </div>
 
-<div class="card">
-<img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Bracelet">
-<h3>Bracelet</h3>
-<p>₹499</p>
-<button onclick="addToCart('Bracelet',499)">Add to Cart</button>
-</div>
+  <div class="card">
+    <img src="https://i.ibb.co/rRJ9B6x2/IMG-20260210-WA0006.jpg" alt="Accessory 2">
+    <h3>butterfly locket</h3>
+    <p>₹89</p>
+    <button onclick="addToCart('butterfly locket', 89)">Add to Cart</button>
+  </div>
 
-<div class="card">
-<img src="https://images.unsplash.com/photo-1585386959984-a4155224a1d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Sunglasses">
-<h3>Sunglasses</h3>
-<p>₹1299</p>
-<button onclick="addToCart('Sunglasses',1299)">Add to Cart</button>
-</div>
+  <div class="card">
+    <img src="https://i.ibb.co/sdn14cFC/IMG-20260210-WA0002.jpg" alt="Accessory 3">
+    <h3>pink heart earrings </h3>
+    <p>₹69</p>
+    <button onclick="addToCart('pink heart earrings ', 69)">Add to Cart</button>
+  </div>
+
+  <div class="card">
+    <img src="https://i.ibb.co/spqmYp9h/IMG-20260210-WA0003.jpg" alt="Accessory 4">
+    <h3>aesthetic earings</h3>
+    <p>₹79</p>
+    <button onclick="addToCart('aesthetic earings', 79)">Add to Cart</button>
+  </div>
 
 </div>
 <div style="text-align:center">
@@ -110,7 +117,6 @@ footer{
 </div>
 </section>
 
-<!-- MINI CART PREVIEW -->
 <section class="cart">
 <h2>Your Cart Preview</h2>
 <div id="cartItems"></div>
@@ -132,7 +138,6 @@ footer{
 © 2026 VibeEra Accessories
 </footer>
 
-<!-- EMAILJS -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <script>
