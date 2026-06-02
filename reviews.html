@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Reviews - VibeEra</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#f8f9fa;
+color:#222;
+}
+
+header{
+background:white;
+padding:18px 5%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+
+.logo{
+font-size:28px;
+font-weight:700;
+}
+
+header a{
+text-decoration:none;
+color:#222;
+font-weight:600;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+padding:30px 20px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+margin-bottom:25px;
+}
+
+h2{
+margin-bottom:15px;
+}
+
+input,
+textarea,
+select{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:1px solid #ddd;
+border-radius:6px;
+}
+
+textarea{
+resize:vertical;
+min-height:120px;
+}
+
+button{
+background:black;
+color:white;
+border:none;
+padding:12px 18px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.review-card{
+background:#fafafa;
+border-left:4px solid black;
+padding:15px;
+margin-top:15px;
+border-radius:8px;
+}
+
+.review-name{
+font-weight:bold;
+font-size:18px;
+}
+
+.review-rating{
+color:#ffb400;
+margin:5px 0;
+}
+
+.review-date{
+font-size:12px;
+color:#777;
+margin-top:8px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:15px;
+margin-bottom:20px;
+}
+
+.stat-box{
+background:white;
+padding:20px;
+border-radius:12px;
+text-align:center;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.stat-box h3{
+font-size:28px;
+}
+
+.no-review{
+text-align:center;
+color:#777;
+padding:20px;
+}
+
+footer{
+background:black;
+color:white;
+text-align:center;
+padding:25px;
+margin-top:30px;
+}
+
+footer p{
+margin:6px 0;
+}
+
+@media(max-width:600px){
+
+.logo{
+font-size:22px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">VibeEra</div>
+
+<div>
+<a href="index.html">← Back To Shop</a>
+</div>
+</header>
+
+<div class="container">
+
+<div class="stats">
+
+<div class="stat-box">
+<h3 id="reviewCount">0</h3>
+<p>Total Reviews</p>
+</div>
+
+<div class="stat-box">
+<h3 id="avgRating">0.0</h3>
+<p>Average Rating</p>
+</div>
+
+</div>
+
+<!-- REVIEW FORM -->
+
+<div class="card">
+
+<h2>Leave A Review</h2>
+
+<input
+type="text"
+id="name"
+placeholder="Your Name">
+
+<select id="rating">
+<option value="">Select Rating</option>
+<option value="5">★★★★★ (5)</option>
+<option value="4">★★★★☆ (4)</option>
+<option value="3">★★★☆☆ (3)</option>
+<option value="2">★★☆☆☆ (2)</option>
+<option value="1">★☆☆☆☆ (1)</option>
+</select>
+
+<textarea
+id="review"
+placeholder="Write your review here..."></textarea>
+
+<button onclick="submitReview()">
+Submit Review
+</button>
+
+</div>
+
+<!-- REVIEWS -->
+
+<div class="card">
+
+<h2>Customer Reviews</h2>
+
+<div id="reviewsContainer"></div>
+
+</div>
+
+</div>
+
+<footer>
+<p>VibeEra Accessories</p>
+<p>📞 +91 8423702403</p>
+<p>📍 Dayanand Nagar, Gorakhpur - 273015</p>
+<p>© 2026 VibeEra</p>
+</footer>
+
+<script>
+
+const OWNER_PHONE = "918423702403";
+
+function submitReview(){
+
+const name =
+document.getElementById("name").value.trim();
+
+const rating =
+document.getElementById("rating").value;
+
+const review =
+document.getElementById("review").value.trim();
+
+if(!name || !rating || !review){
+
+alert("Please fill all fields.");
+
+return;
+}
+
+let reviews =
+JSON.parse(
+localStorage.getItem("vibeera_reviews")
+) || [];
+
+const reviewData = {
+
+name:name,
+rating:Number(rating),
+review:review,
+date:new Date().toLocaleDateString()
+
+};
+
+reviews.unshift(reviewData);
+
+localStorage.setItem(
+"vibeera_reviews",
+JSON.stringify(reviews)
+);
+
+const whatsappMessage =
+
+`⭐ NEW CUSTOMER REVIEW
+
+Name: ${name}
+
+Rating: ${rating}/5
+
+Review:
+${review}
+
+Date:
+${new Date().toLocaleString()}`;
+
+window.open(
+`https://wa.me/${OWNER_PHONE}?text=${encodeURIComponent(whatsappMessage)}`,
+"_blank"
+);
+
+alert(
+"Thank you for your review!"
+);
+
+document.getElementById("name").value="";
+document.getElementById("rating").value="";
+document.getElementById("review").value="";
+
+loadReviews();
+
+}
+
+function loadReviews(){
+
+const reviews =
+JSON.parse(
+localStorage.getItem("vibeera_reviews")
+) || [];
+
+const container =
+document.getElementById(
+"reviewsContainer"
+);
+
+document.getElementById(
+"reviewCount"
+).innerText =
+reviews.length;
+
+if(reviews.length===0){
+
+document.getElementById(
+"avgRating"
+).innerText =
+"0.0";
+
+container.innerHTML =
+'<div class="no-review">No reviews yet.</div>';
+
+return;
+}
+
+const average =
+reviews.reduce(
+(sum,r)=>
+sum + r.rating,
+0
+) / reviews.length;
+
+document.getElementById(
+"avgRating"
+).innerText =
+average.toFixed(1);
+
+container.innerHTML =
+reviews.map(r => `
+
+<div class="review-card">
+
+<div class="review-name">
+${r.name}
+</div>
+
+<div class="review-rating">
+${"★".repeat(r.rating)}
+${"☆".repeat(5-r.rating)}
+</div>
+
+<p>
+${r.review}
+</p>
+
+<div class="review-date">
+${r.date}
+</div>
+
+</div>
+
+`).join("");
+
+}
+
+loadReviews();
+
+</script>
+
+</body>
+</html>
