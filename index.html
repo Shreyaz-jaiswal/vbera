@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VibeEra Accessories</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#fafafa;
+    color:#222;
+}
+
+/* Header */
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 5%;
+    background:white;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:700;
+}
+
+.nav-links{
+    display:flex;
+    gap:20px;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:#222;
+    font-weight:500;
+}
+
+/* Hero */
+.hero{
+    text-align:center;
+    padding:70px 20px;
+    background:linear-gradient(135deg,#f7f7f7,#ffffff);
+}
+
+.hero h1{
+    font-size:42px;
+    margin-bottom:15px;
+}
+
+.hero p{
+    color:#666;
+    max-width:600px;
+    margin:auto;
+}
+
+/* Products */
+.products{
+    padding:50px 5%;
+}
+
+.products h2{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card img{
+    width:100%;
+    height:300px;
+    object-fit:cover;
+}
+
+.card-content{
+    padding:15px;
+    text-align:center;
+}
+
+.price{
+    font-size:20px;
+    font-weight:700;
+    margin:10px 0;
+}
+
+.rating{
+    color:#ffb400;
+    margin-bottom:10px;
+}
+
+button{
+    border:none;
+    background:black;
+    color:white;
+    padding:10px 18px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* Cart Preview */
+.cart-preview{
+    background:white;
+    margin:40px 5%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.cart-preview h2{
+    margin-bottom:15px;
+}
+
+.cart-item{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 0;
+    border-bottom:1px solid #eee;
+}
+
+.total{
+    margin-top:15px;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.cart-btn{
+    display:inline-block;
+    margin-top:15px;
+    background:black;
+    color:white;
+    text-decoration:none;
+    padding:10px 18px;
+    border-radius:6px;
+}
+
+/* About */
+.about{
+    padding:50px 5%;
+    text-align:center;
+}
+
+.about p{
+    max-width:700px;
+    margin:auto;
+    color:#555;
+}
+
+/* Footer */
+footer{
+    background:black;
+    color:white;
+    text-align:center;
+    padding:25px;
+    margin-top:40px;
+}
+
+footer p{
+    margin:6px 0;
+}
+
+@media(max-width:600px){
+
+.hero h1{
+    font-size:30px;
+}
+
+.nav-links{
+    gap:10px;
+    font-size:14px;
+}
+
+.card img{
+    height:250px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">VibeEra</div>
+
+    <div class="nav-links">
+        <a href="login.html" id="loginLink">Login</a>
+        <a href="reviews.html">Reviews</a>
+        <a href="cart.html">Cart</a>
+    </div>
+</header>
+
+<section class="hero">
+    <h1>Stylish Accessories for Every Mood</h1>
+    <p>
+        Discover aesthetic earrings, lockets and fashion accessories
+        carefully selected for your vibe.
+    </p>
+</section>
+
+<section class="products">
+
+<h2>Our Collection</h2>
+
+<div class="product-grid">
+
+<div class="card">
+    <img src="https://i.postimg.cc/9fcRvS3b/1769935626766.png">
+    <div class="card-content">
+        <h3>Moon Earrings</h3>
+        <div class="rating">★★★★★</div>
+        <div class="price">₹69</div>
+        <button onclick="addToCart('Moon Earrings',69)">
+            Add To Cart
+        </button>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://i.postimg.cc/pLRKHyzj/file-00000000b9087206bc33ea3fb15185d7.png">
+    <div class="card-content">
+        <h3>Butterfly Locket</h3>
+        <div class="rating">★★★★★</div>
+        <div class="price">₹89</div>
+        <button onclick="addToCart('Butterfly Locket',89)">
+            Add To Cart
+        </button>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://i.postimg.cc/8PV6Rsyy/file-00000000bb387208b2f5669e7ed4f609-(1).png">
+    <div class="card-content">
+        <h3>Pink Heart Earrings</h3>
+        <div class="rating">★★★★☆</div>
+        <div class="price">₹79</div>
+        <button onclick="addToCart('Pink Heart Earrings',79)">
+            Add To Cart
+        </button>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://i.postimg.cc/PJbN3z6Q/1769935361397.png">
+    <div class="card-content">
+        <h3>Aesthetic Earrings</h3>
+        <div class="rating">★★★★★</div>
+        <div class="price">₹109</div>
+        <button onclick="addToCart('Aesthetic Earrings',109)">
+            Add To Cart
+        </button>
+    </div>
+</div>
+
+</div>
+</section>
+
+<section class="cart-preview">
+
+<h2>Cart Preview</h2>
+
+<div id="cartItems">
+    <p>Your cart is empty.</p>
+</div>
+
+<div class="total" id="total">
+    Total: ₹0
+</div>
+
+<a href="cart.html" class="cart-btn">
+    Go To Cart
+</a>
+
+</section>
+
+<section class="about">
+<h2>About VibeEra</h2>
+<br>
+<p>
+VibeEra is an accessories startup founded by Tejashwa Pandey and friends.
+Our mission is to provide affordable, aesthetic, and trendy accessories
+for everyone.
+</p>
+</section>
+
+<footer>
+<p>VibeEra Accessories</p>
+<p>📞 +91 8423702403</p>
+<p>📍 Dayanand Nagar, Gorakhpur - 273015</p>
+<p>© 2026 VibeEra. All Rights Reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+emailjs.init("jO44k4Y07o-bKvnph");
+
+let cart =
+JSON.parse(localStorage.getItem("vibeera_cart")) || [];
+
+let total =
+parseInt(localStorage.getItem("vibeera_total")) || 0;
+
+function addToCart(name,price){
+
+cart.push({
+    name:name,
+    price:price,
+    qty:1
+});
+
+total += price;
+
+localStorage.setItem(
+"vibeera_cart",
+JSON.stringify(cart)
+);
+
+localStorage.setItem(
+"vibeera_total",
+total
+);
+
+renderCart();
+
+alert(name + " added to cart!");
+}
+
+function renderCart(){
+
+const container =
+document.getElementById("cartItems");
+
+if(cart.length===0){
+
+container.innerHTML =
+"<p>Your cart is empty.</p>";
+
+document.getElementById("total")
+.innerText = "Total: ₹0";
+
+return;
+}
+
+container.innerHTML =
+cart.map(item => `
+<div class="cart-item">
+<span>${item.name}</span>
+<span>₹${item.price}</span>
+</div>
+`).join("");
+
+document.getElementById("total")
+.innerText = "Total: ₹" + total;
+}
+
+function checkLogin(){
+
+const user =
+localStorage.getItem(
+"vibeera_loggedin_user"
+);
+
+const loginLink =
+document.getElementById("loginLink");
+
+if(user){
+
+loginLink.innerText = "Logout";
+loginLink.href = "#";
+
+loginLink.onclick = function(e){
+
+e.preventDefault();
+
+localStorage.removeItem(
+"vibeera_loggedin_user"
+);
+
+location.reload();
+
+};
+
+}
+
+}
+
+renderCart();
+checkLogin();
+</script>
+
+</body>
+</html>
